@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "boot.js",
+  "sourceRoot": "",
+  "sources": [
+    "boot.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;AAAA,EAAA,IAAC,CAAA,WAAW,CAAC,KAAb,CAAmB,MAAnB,EACI;AAAA,IAAA,OAAA,EAAS,SAAA,GAAA,CAAT;AAAA,IAEA,MAAA,EAAQ,SAAA,GAAA,CAFR;GADJ,CAAA,CAAA;AAAA"
+}

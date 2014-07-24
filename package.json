@@ -1,0 +1,17 @@
+{
+  "name": "phaser",
+  "version": "0.0.1",
+  "description": "Phaser test",
+  "contributors": [],
+  "dependencies": {
+    "express": "2.5.11",
+    "forever": ">= 0.10.0",
+    "underscore": "~1.6.0"
+  },
+  "scripts": {
+    "start": "./node_modules/forever/bin/forever --watchDirectory ./ --watch --verbose index.js"
+  },
+  "engines": {
+    "node": ">=0.8.22"
+  }
+}
