@@ -1,6 +1,7 @@
-@ASSETS = '/assets/'
+@ASSETS =
+    IMAGES: '/assets/images/'
 
 @GAME =
-	WIDTH: 900
-	HEIGHT: 650
+	WIDTH: 840
+	HEIGHT: 525
 	GAME_NODE: 'gameNode'

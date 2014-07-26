@@ -1,6 +1,9 @@
 @Application.State 'Boot',
     preload: ()->
-		game.load.image 'progressBar', 'assets/progressBar.png'
+        _dump Phaser
+        @loadPng 'progressBar'
 
-		#900 x 650
     create: ()->
+        console.log 111
+
+    , true
