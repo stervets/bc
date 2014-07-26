@@ -41,16 +41,23 @@
       return this.loadImage(filename, name);
     };
 
+    Application.prototype.globals = {
+      a: 1,
+      b: 2
+    };
+
     function Application() {
       var name, state, _ref;
       this.game = new Phaser.Game(GAME.WIDTH, GAME.HEIGHT, Phaser.WEBGL, GAME.GAME_NODE);
       _ref = Application.states;
       for (name in _ref) {
         state = _ref[name];
-        this.game.state.add(name, state);
+        state = this.game.state.add(name, state);
+        state.app = this;
+        state.globals = this.globals;
+        _dump(state);
       }
       this.game.state.start(Application.initialState);
-      _dump(this.game);
     }
 
     return Application;

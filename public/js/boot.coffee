@@ -1,6 +1,7 @@
 @Application.State 'Boot',
+    v: 111
     preload: ()->
-        _dump Phaser
+        _dump @
         @loadPng 'progressBar'
 
     create: ()->

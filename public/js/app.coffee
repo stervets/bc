@@ -22,11 +22,21 @@ class @Application
         filename+='.jpg'
         @loadImage filename, name
 
+    globals:
+        a: 1
+        b: 2
+
     constructor: ->
         @game = new Phaser.Game(GAME.WIDTH, GAME.HEIGHT, Phaser.WEBGL, GAME.GAME_NODE)
-        @game.state.add name, state for name, state of Application.states
+        for name, state of Application.states
+            state = @game.state.add name, state
+            state.app = @
+            state.globals = @globals
+
+            _dump state
+
         @game.state.start Application.initialState
-        _dump @game
+
 
 
 window.onload = -> new Application()
