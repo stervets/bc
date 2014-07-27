@@ -5,3 +5,21 @@
 	WIDTH: 840
 	HEIGHT: 525
 	GAME_NODE: 'gameNode'
+
+@ACTION =
+    MOVE_UP: 'up'
+    MOVE_DOWN: 'down'
+    MOVE_LEFT: 'left'
+    MOVE_RIGHT: 'right'
+    SHOOT: 'shoot'
+
+@GROUP =
+  ENEMY_BULLET: 0
+  PLAYER_BULLET: 1
+
+@DEFAULT_KEYS = {}
+@DEFAULT_KEYS[ACTION.MOVE_UP] = Phaser.Keyboard.UP
+@DEFAULT_KEYS[ACTION.MOVE_DOWN] = Phaser.Keyboard.DOWN
+@DEFAULT_KEYS[ACTION.MOVE_LEFT] = Phaser.Keyboard.LEFT
+@DEFAULT_KEYS[ACTION.MOVE_RIGHT] = Phaser.Keyboard.RIGHT
+@DEFAULT_KEYS[ACTION.SHOOT] = Phaser.Keyboard.SPACEBAR

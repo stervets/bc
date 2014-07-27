@@ -1,10 +1,10 @@
 @Application.State 'Boot',
-    v: 111
     preload: ()->
-        _dump @
-        @loadPng 'progressBar'
+        @app.loadImage 'progressBar.png'
 
     create: ()->
-        console.log 111
+        @game.stage.backgroundColor = '#3498db'
+        @game.physics.startSystem Phaser.Physics.ARCADE
+        @game.state.start 'Load'
 
     , true

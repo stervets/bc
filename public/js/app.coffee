@@ -1,4 +1,5 @@
 class @Application
+    @Controller: {}
     @states: {}
     @initialState: null
 
@@ -7,36 +8,30 @@ class @Application
         @initialState = name if initialState?
 
     @image: (filename)-> ASSETS.IMAGES+filename
-    @imagePng: (filename)-> Application.image "#{filename}.png"
-    @imageJpeg: (filename)-> Application.image "#{filename}.jpg"
+
+    @getNameFromFilename: (filename, name)->
+        name = filename.substr(0, filename.indexOf('.')) if not name?
+        name
 
     loadImage: (filename, name)->
-        name = filename.substr(0, filename.indexOf('.')) if not name?
-        @game.load.image(name, Application.image(filename))
+        @game.load.image Application.getNameFromFilename(filename, name),
+                         Application.image(filename)
 
-    loadPng: (filename, name)->
-        filename+='.png'
-        @loadImage filename, name
+    loadSpriteSheet: (filename, width, height, name)->
+        @game.load.spritesheet Application.getNameFromFilename(filename, name),
+                                Application.image(filename), width, height
 
-    loadJpeg: (filename, name)->
-        filename+='.jpg'
-        @loadImage filename, name
-
-    globals:
-        a: 1
-        b: 2
+    vars:
+        topScore: 0
 
     constructor: ->
         @game = new Phaser.Game(GAME.WIDTH, GAME.HEIGHT, Phaser.WEBGL, GAME.GAME_NODE)
+
         for name, state of Application.states
             state = @game.state.add name, state
             state.app = @
-            state.globals = @globals
-
-            _dump state
+            state.vars = @vars
 
         @game.state.start Application.initialState
-
-
 
 window.onload = -> new Application()

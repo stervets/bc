@@ -10,6 +10,31 @@
     GAME_NODE: 'gameNode'
   };
 
+  this.ACTION = {
+    MOVE_UP: 'up',
+    MOVE_DOWN: 'down',
+    MOVE_LEFT: 'left',
+    MOVE_RIGHT: 'right',
+    SHOOT: 'shoot'
+  };
+
+  this.GROUP = {
+    ENEMY_BULLET: 0,
+    PLAYER_BULLET: 1
+  };
+
+  this.DEFAULT_KEYS = {};
+
+  this.DEFAULT_KEYS[ACTION.MOVE_UP] = Phaser.Keyboard.UP;
+
+  this.DEFAULT_KEYS[ACTION.MOVE_DOWN] = Phaser.Keyboard.DOWN;
+
+  this.DEFAULT_KEYS[ACTION.MOVE_LEFT] = Phaser.Keyboard.LEFT;
+
+  this.DEFAULT_KEYS[ACTION.MOVE_RIGHT] = Phaser.Keyboard.RIGHT;
+
+  this.DEFAULT_KEYS[ACTION.SHOOT] = Phaser.Keyboard.SPACEBAR;
+
 }).call(this);
 
 //# sourceMappingURL=const.map
