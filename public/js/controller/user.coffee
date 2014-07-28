@@ -1,7 +1,7 @@
 class @Application.Controller.User
   tank: null
   keys: {}
-
+  moving: false
   onMoveKeyDown: (e)->
     _dump @_keySign[e.keyCode] & 1
     if @_keySign[e.keyCode] & 1 and not (@pressedKeys & 1)
@@ -40,8 +40,19 @@ class @Application.Controller.User
     if  @_pressedKeys isnt @_oldPressedKeys
       for action, index in @_moveKeys
         break if @_moveKeyObjects[action].isDown and (@_oldPressedKeys > @_pressedKeys or not (@_oldPressedKeys & @_keySign[action]))
-      if index < @_moveKeys.length then @tank.move action else @tank.stop()
+      if index < @_moveKeys.length
+        @tank.move action
+        @moving = true
+      else
+        @moving = false
+        @tank.stop()
       @_oldPressedKeys = @_pressedKeys
+
+    #if not @moving
+    #  _dump @tank.body.position.x, @tank.body.position.y, Math.floor(@tank.body.position.x % 16), @tank.body.position.y % 16
+
+    #if not @moving and not Math.floor(@tank.body.position.x % 16) and not Math.floor(@tank.body.position.x % 16)
+    #  @tank.stop()
 
     @tank.shoot() if @_shootKey.isDown
 

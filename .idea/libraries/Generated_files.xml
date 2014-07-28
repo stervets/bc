@@ -1,0 +1,30 @@
+<component name="libraryTable">
+  <library name="Generated files" type="javaScript">
+    <properties>
+      <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/public/js/load.js" />
+        <item url="file://$PROJECT_DIR$/public/js/controller/user.js" />
+        <item url="file://$PROJECT_DIR$/public/js/boot.js" />
+        <item url="file://$PROJECT_DIR$/public/js/const.js" />
+        <item url="file://$PROJECT_DIR$/index.js" />
+        <item url="file://$PROJECT_DIR$/public/js/controllerUser.js" />
+        <item url="file://$PROJECT_DIR$/public/js/app.js" />
+        <item url="file://$PROJECT_DIR$/public/js/tank.js" />
+        <item url="file://$PROJECT_DIR$/public/js/game.js" />
+      </sourceFilesUrls>
+    </properties>
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/public/js/controllerUser.js" />
+      <root url="file://$PROJECT_DIR$/public/js/load.js" />
+      <root url="file://$PROJECT_DIR$/public/js/controller/user.js" />
+      <root url="file://$PROJECT_DIR$/public/js/boot.js" />
+      <root url="file://$PROJECT_DIR$/public/js/const.js" />
+      <root url="file://$PROJECT_DIR$/index.js" />
+      <root url="file://$PROJECT_DIR$/public/js/controllerUser.js" />
+      <root url="file://$PROJECT_DIR$/public/js/app.js" />
+      <root url="file://$PROJECT_DIR$/public/js/tank.js" />
+      <root url="file://$PROJECT_DIR$/public/js/game.js" />
+    </CLASSES>
+    <SOURCES />
+  </library>
+</component>

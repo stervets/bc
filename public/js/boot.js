@@ -5,7 +5,7 @@
       return this.app.loadImage('progressBar.png');
     },
     create: function() {
-      this.game.stage.backgroundColor = '#3498db';
+      this.game.stage.backgroundColor = '#505065';
       this.game.physics.startSystem(Phaser.Physics.ARCADE);
       return this.game.state.start('Load');
     }
