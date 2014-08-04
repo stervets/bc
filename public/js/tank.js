@@ -62,12 +62,31 @@
     };
 
     Tank.prototype.move = function(direction) {
-      this.angleTween._valuesStart.angle = this.body.angle;
-      this.angleTween._valuesEnd.angle = VELOCITY[direction].angle;
-      this.angleTween.start();
-      this.body.body.position.x = VELOCITY[direction].x ? this.body.body.position.x : this.body.body.position.x - this.body.body.position.x % 16;
-      this.body.body.position.y = VELOCITY[direction].y ? this.body.body.position.y : this.body.body.position.y - this.body.body.position.y % 16;
-      return this.body.body.velocity.setTo(VELOCITY[direction].x, VELOCITY[direction].y);
+      var angleFrom, angleTo;
+      this.body.body.position.x = VELOCITY[direction].x ? this.body.body.position.x : Math.round(this.body.body.position.x / 16) * 16;
+      this.body.body.position.y = VELOCITY[direction].y ? this.body.body.position.y : Math.round(this.body.body.position.y / 16) * 16;
+      this.body.body.velocity.setTo(VELOCITY[direction].x, VELOCITY[direction].y);
+      angleFrom = this.body.angle;
+      angleTo = VELOCITY[direction].angle;
+      if (Math.abs(angleFrom) !== angleTo || Math.abs(angleFrom) === 90) {
+        this.angleTween._valuesStart.angle = (function() {
+          switch (false) {
+            case !(angleFrom === 180 && angleTo === -90):
+              this.body.angle = -179;
+              return -180;
+            case !(angleFrom === -90 && angleTo === 180):
+              this.body.angle = 269;
+              return 270;
+            case !(angleFrom === -180 && angleTo === 90):
+              this.body.angle = 179;
+              return 180;
+            default:
+              return angleFrom;
+          }
+        }).call(this);
+        this.angleTween._valuesEnd.angle = angleFrom === -90 && angleTo === 180 ? -180 : angleTo;
+        return this.angleTween.start();
+      }
     };
 
     Tank.prototype.stop = function() {

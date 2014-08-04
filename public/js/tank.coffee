@@ -51,21 +51,30 @@ class @Tank
 
 
   move: (direction)->
-    #console.log 'moving'
-    #@angleTween.stop()
-    #@angleTween.from({angle: @body.angle},0)
-    #@angleTween.to({angle: VELOCITY[direction].angle }, 50)
-    @angleTween._valuesStart.angle = @body.angle
-    @angleTween._valuesEnd.angle = VELOCITY[direction].angle
-    #_dump @body.angle, VELOCITY[direction].angle
-    #@body.angle = VELOCITY[direction].angle
-    #_dump(@angleTween)
-    @angleTween.start()
-    #__dump direction
-    #@changeDirectionTweens[direction].start()
-    @body.body.position.x = if VELOCITY[direction].x then @body.body.position.x else @body.body.position.x - @body.body.position.x % 16
-    @body.body.position.y = if VELOCITY[direction].y then @body.body.position.y else @body.body.position.y - @body.body.position.y % 16
+    @body.body.position.x = if VELOCITY[direction].x then @body.body.position.x else Math.round(@body.body.position.x/16)*16
+    @body.body.position.y = if VELOCITY[direction].y then @body.body.position.y else Math.round(@body.body.position.y/16)*16
     @body.body.velocity.setTo(VELOCITY[direction].x, VELOCITY[direction].y)
+
+    #@body.angle = Math.abs(@body.angle)
+    #if @body.angle isnt VELOCITY[direction].angle
+
+    angleFrom = @body.angle
+    angleTo = VELOCITY[direction].angle
+    if Math.abs(angleFrom) isnt angleTo or Math.abs(angleFrom) is 90
+      @angleTween._valuesStart.angle = switch
+                                        when angleFrom is 180 and angleTo is -90
+                                          @body.angle = -179
+                                          -180
+                                        when angleFrom is -90 and angleTo is 180
+                                          @body.angle = 269
+                                          270
+                                        when angleFrom is -180 and angleTo is 90
+                                          @body.angle = 179
+                                          180
+                                        else angleFrom
+
+      @angleTween._valuesEnd.angle = if angleFrom is -90 and angleTo is 180 then -180 else angleTo
+      @angleTween.start()
 
   stop: ()->
     @body.body.velocity.setTo(0, 0)
@@ -83,7 +92,7 @@ class @Tank
     @bullets = @game.add.group()
     @bullets.enableBody = true
     @bullets.enableBodyDebug = true
-    bullet = @game.add.sprite(@game.world.bounds.x-100, @game.world.bounds.y-100, BULLET);
+    bullet = @game.add.sprite(@game.world.bounds.x-100, @game.world.bounds.y-100, BULLET)
     bullet.anchor.set(0.5,0.5)
     bullet.checkWorldBounds = true;
     bullet.outOfBoundsKill = true;
@@ -122,6 +131,7 @@ class @Tank
 
     @angleTween = @game.add.tween(@body)
     @angleTween.to({angle: 90}, 100)
+    #_dump @angleTween
     #_dump @angleTween
 
     #@changeDirectionTweens = {}
