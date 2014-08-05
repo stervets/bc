@@ -4,6 +4,11 @@ class @Application
     @initialState: null
 
     @State: (name, params, initialState)->
+        params.create = ((create)->
+          ()->
+            @game.$ = @
+            create.apply @
+        )(params.create || ()->)
         @states[name] = params
         @initialState = name if initialState?
 

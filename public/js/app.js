@@ -8,6 +8,12 @@
     Application.initialState = null;
 
     Application.State = function(name, params, initialState) {
+      params.create = (function(create) {
+        return function() {
+          this.game.$ = this;
+          return create.apply(this);
+        };
+      })(params.create || function() {});
       this.states[name] = params;
       if (initialState != null) {
         return this.initialState = name;

@@ -114,3 +114,12 @@ for y in [0...MAP_HEIGHT]
   [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 1, 1, 4, 4, 0]
   [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 1, 1, 4, 4, 0]
 ]
+
+@REAL_MAP = []
+for y in [0...MAP.length*2]
+  for yy in [0...2]
+    REAL_MAP[y*2+yy] = []
+    for x in [0...MAP[0].length*2]
+      for xx in [0...2]
+        REAL_MAP[y*2+yy][x*2+xx] = MAP[Math.floor y/2][Math.floor x/2]
+#console.log REAL_MAP

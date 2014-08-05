@@ -46,6 +46,8 @@
 
     Tank.prototype.bullets = null;
 
+    Tank.prototype.moving = false;
+
     Tank.prototype.shoot = function() {
       var bullet;
       if (this.canShoot && (bullet = this.bullets.getFirstDead())) {
@@ -63,6 +65,7 @@
 
     Tank.prototype.move = function(direction) {
       var angleFrom, angleTo;
+      this.moving = direction;
       this.body.body.position.x = VELOCITY[direction].x ? this.body.body.position.x : Math.round(this.body.body.position.x / 16) * 16;
       this.body.body.position.y = VELOCITY[direction].y ? this.body.body.position.y : Math.round(this.body.body.position.y / 16) * 16;
       this.body.body.velocity.setTo(VELOCITY[direction].x, VELOCITY[direction].y);
@@ -90,14 +93,19 @@
     };
 
     Tank.prototype.stop = function() {
+      this.moving = false;
       return this.body.body.velocity.setTo(0, 0);
     };
 
-    Tank.prototype.onBulletCollide = function(bullet) {
+    Tank.prototype.onBulletWallCollide = function(bullet, wall) {
       this.damageAnimation.position.set(bullet.position.x, bullet.position.y);
       this.damageAnimation.rotation = bullet.rotation;
       bullet.kill();
-      return this.damageAnimation.animations.play(DAMAGE);
+      this.damageAnimation.animations.play(DAMAGE);
+      this.game.$.destroyWall(wall, bullet.angle);
+      if (this.moving) {
+        return this.move(this.moving);
+      }
     };
 
     function Tank(game, x, y, bulletGroup) {
@@ -106,7 +114,7 @@
       this.x = x != null ? x : 0;
       this.y = y != null ? y : 0;
       this.bulletGroup = bulletGroup != null ? bulletGroup : GROUP.ENEMY_BULLET;
-      this.onBulletCollide = __bind(this.onBulletCollide, this);
+      this.onBulletWallCollide = __bind(this.onBulletWallCollide, this);
       this.bullets = this.game.add.group();
       this.bullets.enableBody = true;
       this.bullets.enableBodyDebug = true;

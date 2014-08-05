@@ -195,35 +195,83 @@
       map.getTile(x, y + 1, layer).index = res[2];
       return map.getTile(x + 1, y + 1, layer).index = res[3];
     },
+    destroyWall: function(wall, angle, power) {
+      var dir, shift, vertical, x, x1, x2, y, y1, y2, _i, _ref, _ref1, _results;
+      if (power == null) {
+        power = 1;
+      }
+      vertical = !!(angle % 180);
+      shift = wall[(vertical ? 'y' : 'x')] % 2;
+      if (!angle) {
+        angle = 1;
+      }
+      dir = angle / Math.abs(angle);
+      if (vertical) {
+        x1 = wall.x + dir * power + 1;
+        x2 = wall.x + 1;
+        if (x1 > x2) {
+          _ref = [x2 - 1, x1 - 1], x1 = _ref[0], x2 = _ref[1];
+        }
+        y1 = wall.y - shift;
+        y2 = wall.y + shift + 2;
+      } else {
+        y1 = wall.y - dir * power + 1;
+        y2 = wall.y + 1;
+        if (y1 > y2) {
+          _ref1 = [y2 - 1, y1 - 1], y1 = _ref1[0], y2 = _ref1[1];
+        }
+        x1 = wall.x - shift;
+        x2 = wall.x + shift + 2;
+      }
+      _results = [];
+      for (x = _i = x1; x1 <= x2 ? _i < x2 : _i > x2; x = x1 <= x2 ? ++_i : --_i) {
+        _results.push((function() {
+          var _j, _results1;
+          _results1 = [];
+          for (y = _j = y1; y1 <= y2 ? _j < y2 : _j > y2; y = y1 <= y2 ? ++_j : --_j) {
+            this.map.removeTile(x, y, this.layer[LAYER.WALLS]);
+            _results1.push(this.map.putTile(MAP_TILE[TILE_TYPE.GROUND][0], x, y, this.layer[LAYER.GROUND]));
+          }
+          return _results1;
+        }).call(this));
+      }
+      return _results;
+
+      /*
+      for x in [x1...x2]
+        for y in [y1...y2]
+          @processTile @map, x, y
+       */
+    },
     create: function() {
-      var index, layer, layerIndex, line, map, mapHeight, mapWidth, name, rx, ry, tile, tiles, value, x, y, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref;
-      map = this.game.add.tilemap(null, 16, 16);
-      map.addTilesetImage('map');
-      map.create(name, MAP[0].length * 2, MAP.length * 2, 16, 16);
+      var index, layer, layerIndex, line, mapHeight, mapWidth, name, rx, ry, tile, tiles, value, x, y, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref;
+      this.map = this.game.add.tilemap(null, 16, 16);
+      this.map.addTilesetImage('map');
+      this.map.create(name, MAP[0].length * 2, MAP.length * 2, 16, 16);
       this.layer = [];
       for (name in LAYER) {
         index = LAYER[name];
-        this.layer[index] = map.createBlankLayer(name, MAP[0].length * 2, MAP.length * 2, 16, 16);
+        this.layer[index] = this.map.createBlankLayer(name, MAP[0].length * 2, MAP.length * 2, 16, 16);
       }
-      mapWidth = map.width - 1;
-      mapHeight = map.height - 1;
+      mapWidth = this.map.width - 1;
+      mapHeight = this.map.height - 1;
       for (y = _i = 0, _len = MAP.length; _i < _len; y = ++_i) {
         line = MAP[y];
         for (x = _j = 0, _len1 = line.length; _j < _len1; x = ++_j) {
           value = line[x];
           rx = x * 2;
           ry = y * 2;
-          tile = map.putTile(MAP_TILE[value][0], rx, ry, this.layer[LAYER_TILES[value]]);
-          map.putTile(MAP_TILE[value][0], rx + 1, ry, this.layer[LAYER_TILES[value]]);
-          map.putTile(MAP_TILE[value][0], rx, ry + 1, this.layer[LAYER_TILES[value]]);
-          map.putTile(MAP_TILE[value][0], rx + 1, ry + 1, this.layer[LAYER_TILES[value]]);
+          tile = this.map.putTile(MAP_TILE[value][0], rx, ry, this.layer[LAYER_TILES[value]]);
+          this.map.putTile(MAP_TILE[value][0], rx + 1, ry, this.layer[LAYER_TILES[value]]);
+          this.map.putTile(MAP_TILE[value][0], rx, ry + 1, this.layer[LAYER_TILES[value]]);
+          this.map.putTile(MAP_TILE[value][0], rx + 1, ry + 1, this.layer[LAYER_TILES[value]]);
         }
       }
       for (y = _k = 0, _len2 = MAP.length; _k < _len2; y = ++_k) {
         line = MAP[y];
         for (x = _l = 0, _len3 = line.length; _l < _len3; x = ++_l) {
           value = line[x];
-          this.processTile(map, x, y);
+          this.processTile(this.map, x, y);
         }
       }
       _ref = this.layer;
@@ -236,7 +284,7 @@
             tiles = tiles.concat(MAP_TILE[tile]);
           }
         }
-        map.setCollision(tiles, true, layer);
+        this.map.setCollision(tiles, true, layer);
       }
       this.game.world.setBounds(0, 0, GAME.WIDTH, GAME.HEIGHT);
       this.bullets = [];
@@ -253,7 +301,7 @@
       this.playerController.update();
       this.game.physics.arcade.collide(this.player.body, this.layer[LAYER.WALLS]);
       this.game.physics.arcade.collide(this.player.body, this.layer[LAYER.WATER]);
-      return this.game.physics.arcade.collide(this.player.bullets, this.layer[LAYER.WALLS], this.player.onBulletCollide);
+      return this.game.physics.arcade.collide(this.player.bullets, this.layer[LAYER.WALLS], this.player.onBulletWallCollide);
     }
   });
 

@@ -32,6 +32,7 @@ class @Tank
   bulletGroup: GROUP.ENEMY_BULLET
   canShoot: true
   bullets: null
+  moving: false
 
   shoot: ()->
     if (@canShoot && bullet = @bullets.getFirstDead())
@@ -51,6 +52,7 @@ class @Tank
 
 
   move: (direction)->
+    @moving = direction
     @body.body.position.x = if VELOCITY[direction].x then @body.body.position.x else Math.round(@body.body.position.x/16)*16
     @body.body.position.y = if VELOCITY[direction].y then @body.body.position.y else Math.round(@body.body.position.y/16)*16
     @body.body.velocity.setTo(VELOCITY[direction].x, VELOCITY[direction].y)
@@ -77,16 +79,22 @@ class @Tank
       @angleTween.start()
 
   stop: ()->
+    @moving = false
     @body.body.velocity.setTo(0, 0)
     #@body.body.position.setTo(@body.body.position.x - @body.body.position.x % 16,
     #  @body.body.position.y - @body.body.position.y % 16)
 
-  onBulletCollide: (bullet)=>
+  onBulletWallCollide: (bullet, wall)=>
     @damageAnimation.position.set(bullet.position.x,bullet.position.y)
     @damageAnimation.rotation = bullet.rotation
     #_dump bullet
     bullet.kill()
-    @damageAnimation.animations.play(DAMAGE)
+    @damageAnimation.animations.play DAMAGE
+    #_dump @game
+    #_dump(TILE_ASSOC[wall.index], bullet.angle%180)
+    #@game.$.map.removeTile wall.x, wall.y, @game.$.layer[LAYER.WALLS]
+    @game.$.destroyWall wall, bullet.angle
+    @move @moving if (@moving)
 
   constructor: (@game, @x = 0, @y = 0, @bulletGroup = GROUP.ENEMY_BULLET)->
     @bullets = @game.add.group()

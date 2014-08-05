@@ -183,6 +183,7 @@
 
 
     layer = @getLayer(map, x, y)
+
     map.getTile(x, y, layer).index = res[0]
     map.getTile(x+1, y, layer).index = res[1]
     map.getTile(x, y+1, layer).index = res[2]
@@ -193,33 +194,62 @@
     #  for x in [0...layer.map.width]
     #    console.log map.getTile(x,y,layer).index# layer.getTiles(x-size, y-size, size*2, size*2, false)
 
+  destroyWall: (wall, angle, power=1)->
+    vertical = !!(angle % 180)
+    shift = wall[(if vertical then 'y' else 'x')] % 2
+    angle = 1 if not angle
+    dir = angle/Math.abs(angle)
+
+    if vertical
+      x1 = wall.x + dir * power+1
+      x2 = wall.x+1
+      [x1, x2] = [x2-1, x1-1] if x1>x2
+      y1 = wall.y-shift
+      y2 = wall.y+shift+2
+    else
+      y1 = wall.y - dir * power + 1
+      y2 = wall.y + 1
+      [y1, y2] = [y2-1, y1-1] if y1>y2
+      x1 = wall.x-shift
+      x2 = wall.x+shift+2
+
+    for x in [x1...x2]
+      for y in [y1...y2]
+        @map.removeTile(x,y, @layer[LAYER.WALLS])
+        @map.putTile(MAP_TILE[TILE_TYPE.GROUND][0], x,y, @layer[LAYER.GROUND])
+    ###
+    for x in [x1...x2]
+      for y in [y1...y2]
+        @processTile @map, x, y
+    ###
+
   create: ()->
     #@map = _.cloneDeep(MAP)
-    map = @game.add.tilemap(null, 16, 16)
-    map.addTilesetImage 'map'
-    map.create(name, MAP[0].length*2, MAP.length*2, 16, 16)
+    @map = @game.add.tilemap(null, 16, 16)
+    @map.addTilesetImage 'map'
+    @map.create(name, MAP[0].length*2, MAP.length*2, 16, 16)
 
     @layer = []
 
     for name, index of LAYER
-      @layer[index] = map.createBlankLayer(name, MAP[0].length*2, MAP.length*2, 16, 16)
+      @layer[index] = @map.createBlankLayer(name, MAP[0].length*2, MAP.length*2, 16, 16)
 
-    mapWidth = map.width - 1
-    mapHeight = map.height - 1
+    mapWidth = @map.width - 1
+    mapHeight = @map.height - 1
 
     for line, y in MAP
       for value, x in line
         rx = x * 2
         ry = y * 2
-        tile = map.putTile(MAP_TILE[value][0], rx, ry, @layer[LAYER_TILES[value]]);
-        map.putTile(MAP_TILE[value][0], rx + 1, ry, @layer[LAYER_TILES[value]]);
-        map.putTile(MAP_TILE[value][0], rx, ry + 1, @layer[LAYER_TILES[value]]);
-        map.putTile(MAP_TILE[value][0], rx + 1, ry + 1, @layer[LAYER_TILES[value]]);
+        tile = @map.putTile(MAP_TILE[value][0], rx, ry, @layer[LAYER_TILES[value]]);
+        @map.putTile(MAP_TILE[value][0], rx + 1, ry, @layer[LAYER_TILES[value]]);
+        @map.putTile(MAP_TILE[value][0], rx, ry + 1, @layer[LAYER_TILES[value]]);
+        @map.putTile(MAP_TILE[value][0], rx + 1, ry + 1, @layer[LAYER_TILES[value]]);
 
 
     for line, y in MAP
       for value, x in line
-        @processTile map, x, y
+        @processTile @map, x, y
 
 
     #console.log map.layers
@@ -228,7 +258,7 @@
       tiles = []
       for tile, layerIndex of LAYER_TILES
         tiles = tiles.concat(MAP_TILE[tile]) if MAP_TILE[tile] and layerIndex is index
-      map.setCollision(tiles, true, layer)
+      @map.setCollision(tiles, true, layer)
 
     @game.world.setBounds(0, 0, GAME.WIDTH, GAME.HEIGHT);
     @bullets = []
@@ -246,7 +276,7 @@
     @game.physics.arcade.collide(@player.body, @layer[LAYER.WALLS]);
     @game.physics.arcade.collide(@player.body, @layer[LAYER.WATER]);
 
-    @game.physics.arcade.collide(@player.bullets, @layer[LAYER.WALLS], @player.onBulletCollide);
+    @game.physics.arcade.collide(@player.bullets, @layer[LAYER.WALLS], @player.onBulletWallCollide);
 
 #@game.debug.body(@player.body)
 #@game.debug.cameraInfo(@game.camera, 32, 32)
